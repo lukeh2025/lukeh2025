@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horne IT Audit Tool</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        /* Header styling */
+        header {
+            background-color: #0056b3;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+
+        /* Tab navigation styling */
+        nav {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        nav button.active {
+            background-color: #004080;
+        }
+
+        /* Screen styling */
+        .screen {
+            display: none;
+        }
+
+        .active-screen {
+            display: block;
+        }
+
+        /* Container for content */
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: #0056b3;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Button styling */
+        .button {
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background-color: #004080;
+        }
+
+        /* Specific styling for Audit Tool */
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .attribution {
+            margin-top: 20px;
+            font-size: 1em;
+            color: #777;
+            text-align: center;
+        }
+
+        hr {
+            margin-top: 30px;
+            border: 0;
+            border-top: 1px solid #ddd;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>Horne IT Audit Tool</h1>
+    </header>
+
+    <!-- Navigation between screens -->
+    <nav>
+        <button class="tab-button" onclick="changeScreen(1)">Horne IT Audit Tool</button>
+        <button class="tab-button" onclick="changeScreen(2)">Audit Sample Selection Tool</button>
+    </nav>
+
+    <!-- Horne IT Audit Tool Screen -->
+    <div id="screen1" class="screen active-screen">
+        <div class="container">
+            <h2>Welcome to the IT Audit Tool</h2>
+            <p>This tool helps with the independent selection of samples for IT audits, ensuring that they are unbiased and compliant with necessary standards.</p>
+            <p>You can use this tool to generate random sample selections and review the audit processes in a more efficient way. This simplifies the process and reduces the risk of errors in the audit workflow.</p>
+        </div>
+    </div>
+
+    <!-- Audit Independent Sample Selection Tool Screen -->
+    <div id="screen2" class="screen">
+        <div class="container">
+            <h1 style="text-align: center;">Horne IT Audit<br>Independent Sample Selection Tool</h1>
+            <label for="totalItems">Total Items in Population:</label>
+            <input type="number" id="totalItems" placeholder="Enter total items" min="1" required>
+
+            <label for="sampleSize">Sample Size:</label>
+            <input type="number" id="sampleSize" placeholder="Enter sample size" min="1" required>
+
+            <button onclick="generateRandomSample()">Generate Random Numbers</button>
+
+            <div class="result">
+                <h3>Random Sample:</h3>
+                <p id="resultOutput">No sample generated yet.</p>
+            </div>
+
+            <hr>
+
+            <p class="attribution">Made by Luke Houston</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Made by Luke Houston</p>
+    </footer>
+
+    <script>
+        // Function to switch between screens
+        function changeScreen(screenNumber) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active-screen'));
+            document.getElementById('screen' + screenNumber).classList.add('active-screen');
+
+            // Update active button
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            buttons[screenNumber - 1].classList.add('active');
+        }
+
+        // Function to generate random sample for Audit Tool
+        function generateRandomSample() {
+            const totalItems = parseInt(document.getElementById('totalItems').value);
+            const sampleSize = parseInt(document.getElementById('sampleSize').value);
+            
+            if (isNaN(totalItems) || isNaN(sampleSize) || totalItems <= 0 || sampleSize <= 0) {
+                alert('Please enter valid positive numbers for both fields.');
+                return;
+            }
+
+            if (sampleSize > totalItems) {
+                alert('Sample size cannot be greater than the total items.');
+                return;
+            }
+
+            // Create an array of numbers from 1 to totalItems
+            const population = Array.from({ length: totalItems }, (_, i) => i + 1);
+
+            // Shuffle the array and pick the first "sampleSize" numbers
+            const shuffled = population.sort(() => 0.5 - Math.random());
+            const randomSample = shuffled.slice(0, sampleSize);
+
+            // Display the random sample
+            document.getElementById('resultOutput').textContent = `Sample: ${randomSample.join(', ')}`;
+        }
+    </script>
+
+</body>
+</html>
